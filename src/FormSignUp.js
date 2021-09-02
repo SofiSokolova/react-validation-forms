@@ -3,9 +3,19 @@ import {useForm} from "./useForm";
 import {signUpSchema} from "./validation";
 
 export const FormSignUp = () => {
-  const { handleChange, handleSubmit, values, errors, isSubmitting } = useForm({validation: signUpSchema,})
 
-  
+  const { handleChange, handleSubmit, values, errors, isSubmitting } = useForm({
+    form: {
+      username: '',
+      email: '',
+      age: 0
+
+    },
+    validation: signUpSchema,
+    onSubmit: value => console.log('Successful')
+  })
+
+
   return (
     <div className='form-content'>
       <form className='form-with-validation' onSubmit={handleSubmit}>

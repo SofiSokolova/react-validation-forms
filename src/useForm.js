@@ -1,26 +1,13 @@
 import {useState, useEffect} from "react";
-import {mapValidationErrors, useYupValidation} from "./validation";
-import {FormSignUp} from "./FormSignUp";
-//import {signUpSchema, useYupValidation} from "./validation";
 
-export const useForm = validate => {
-  const [values, setValues] = useState({
-    username: '',
-    email: '',
-    age: '',
-  })
-
-
-  //const [errors, setErrors] = useYupValidation()
+export const useForm = ({
+                         form,
+                         validation,
+                         onSubmit
+                       }) => {
+  const [values, setValues] = useState(form)
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    if (Object.keys(errors).length === 0 && isSubmitting) {
-      //FormSignUp();
-    }
-  }, [errors]);
-
 
   const handleChange = event => {
     const { name, value } = event.target
@@ -29,13 +16,33 @@ export const useForm = validate => {
       [name]: value
     })
   }
-  
-  const handleSubmit = event => {
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    
-    setErrors(mapValidationErrors(values))
-    setIsSubmitting(true);
+    await validate(values, onSubmit, validation)
   }
-  
+
+  const mapValidationErrors = (yupError) => {
+    let errors = {}
+    yupError.inner.forEach((valErr, index) => {
+      errors[valErr.path] = yupError.errors[index]
+    })
+    return errors
+  }
+
+  const validate = (data, onValid, schema) => {
+    return schema.validate(data, { abortEarly: false })
+      .then(
+        () => {
+          setErrors({})
+          onValid(data)
+          setIsSubmitting(true);
+        },
+        err => {
+          setErrors(mapValidationErrors(err))
+        }
+      )
+  }
+
   return {handleChange, handleSubmit, values, errors, isSubmitting}
 };
