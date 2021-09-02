@@ -9,7 +9,7 @@ export const useForm = validate => {
   })
   
   //const [errors, setErrors] = useYupValidation()
-  const [errors, setErrors] = useState()
+  const [errors, setErrors] = useState({})
   
   const handleChange = event => {
     const { name, value } = event.target

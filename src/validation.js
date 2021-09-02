@@ -55,7 +55,7 @@ export default function validation(values) {
   }
   
   if (!values.age) {
-    errors.email = 'Age is required'
+    errors.age = 'Age is required'
   }
   
   return errors;
