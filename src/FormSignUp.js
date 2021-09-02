@@ -1,15 +1,18 @@
 import React from 'react';
 import {useForm} from "./useForm";
-import validation from "./validation";
+import {signUpSchema} from "./validation";
 
 export const FormSignUp = () => {
-  const { handleChange, handleSubmit, values, errors } = useForm(validation)
+  const { handleChange, handleSubmit, values, errors, isSubmitting } = useForm({validation: signUpSchema,})
 
   
   return (
     <div className='form-content'>
       <form className='form-with-validation' onSubmit={handleSubmit}>
         <h1>Sign Up here:</h1>
+        {Object.keys(errors).length === 0 && isSubmitting && (
+          <span className="success-msg">Signed in successfully</span>
+        )}
         <div className='sign-up-form-inputs'>
           <label htmlFor='username' className='form-label'>
             Username:

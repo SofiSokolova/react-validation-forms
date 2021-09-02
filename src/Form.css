@@ -93,3 +93,8 @@
     );
     transition: all 0.4s ease-out;
 }
+
+.success-msg {
+    font-size: 1rem;
+    color: #000000;
+}
