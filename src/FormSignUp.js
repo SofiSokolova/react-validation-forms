@@ -37,12 +37,12 @@ export const FormSignUp = () => {
           {errors.email && <p>{errors.email}</p>}
         </div>
         <div className='sign-up-form-inputs'>
-          <label htmlFor='userAge' className='form-label'>
+          <label htmlFor='age' className='form-label'>
             Age:
           </label>
-          <input id='userAge'
+          <input id='age'
                  type='number'
-                 name='userAge'
+                 name='age'
                  className='form-input'
                  placeholder='Enter your age'
                  value={values.age}

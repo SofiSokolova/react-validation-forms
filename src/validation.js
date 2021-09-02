@@ -50,7 +50,7 @@ export default function validation(values) {
   
   if (!values.email.trim()) {
     errors.email = 'Email required'
-  } else if (regExpForEmail.test(values.email)) {
+  } else if (!regExpForEmail.test(values.email)) {
     errors.email = 'Email is invalid'
   }
   
