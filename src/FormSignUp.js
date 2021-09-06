@@ -4,15 +4,24 @@ import {signUpSchema} from "./validation";
 
 export const FormSignUp = () => {
 
-  const { handleChange, handleSubmit, values, errors, isSubmitting } = useForm({
+  const {handleChange, handleSubmit, handleBlur, values, errors, setErrors, isSubmitting} = useForm({
     form: {
       username: '',
       email: '',
       age: 0
-
     },
     validation: signUpSchema,
-    onSubmit: value => console.log('Successful')
+    onSubmit: async value => {
+      try {
+        await Promise.reject({
+          errors: {
+            username: 'Not unique'
+          }
+        })  
+      } catch (e) {
+        setErrors({ ...errors, ...e.errors })
+      }
+    }
   })
 
 
@@ -33,7 +42,8 @@ export const FormSignUp = () => {
                  className='form-input'
                  placeholder='Enter your name'
                  value={values.username}
-                 onChange={handleChange}/>
+                 onChange={handleChange}
+                 onBlur={handleBlur}/>
           {errors.username && <p>{errors.username}</p>}
         </div>
         <div className='sign-up-form-inputs'>
@@ -46,7 +56,8 @@ export const FormSignUp = () => {
                  className='form-input'
                  placeholder='Enter your email'
                  value={values.email}
-                 onChange={handleChange}/>
+                 onChange={handleChange}
+                 onBlur={handleBlur}/>
           {errors.email && <p>{errors.email}</p>}
         </div>
         <div className='sign-up-form-inputs'>
@@ -59,7 +70,8 @@ export const FormSignUp = () => {
                  className='form-input'
                  placeholder='Enter your age'
                  value={values.age}
-                 onChange={handleChange}/>
+                 onChange={handleChange}
+                 onBlur={handleBlur}/>
           {errors.age && <p>{errors.age}</p>}
         </div>
         <button className='form-sign-up-btn' type='submit'>Sign up</button>

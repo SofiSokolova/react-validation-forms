@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import {useState} from "react";
 
 export const useForm = ({
                          form,
@@ -22,11 +22,34 @@ export const useForm = ({
     await validate(values, onSubmit, validation)
   }
 
-  const mapValidationErrors = (yupError) => {
+  const handleBlur =  async e => {
+    const { name, value } = e.target;
+
+    try {
+      await validation.fields[name].validate(value);
+      const actualErrors = {...errors}
+      
+      delete actualErrors[name]
+      setErrors(actualErrors)
+    }
+       catch (e) {
+      setErrors({...errors, ...mapValidationErrors(e, name)})
+    }
+  };
+
+  const mapValidationErrors = (yupError, name) => {
     let errors = {}
-    yupError.inner.forEach((valErr, index) => {
-      errors[valErr.path] = yupError.errors[index]
-    })
+
+    if (!name) {
+      yupError.inner.forEach((valErr, index) => {
+        if (!errors[valErr.path]){
+          errors[valErr.path] = yupError.errors[index]
+        }
+      })
+    } else {
+      errors[name] = yupError.errors[0]
+    }
+    
     return errors
   }
 
@@ -44,5 +67,5 @@ export const useForm = ({
       )
   }
 
-  return {handleChange, handleSubmit, values, errors, isSubmitting}
+  return {handleChange, handleSubmit, handleBlur, values, errors, setErrors, isSubmitting}
 };
