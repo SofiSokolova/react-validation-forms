@@ -7,7 +7,6 @@ export const useForm = ({
                        }) => {
   const [values, setValues] = useState(form)
   const [errors, setErrors] = useState({})
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = event => {
     const { name, value } = event.target
@@ -53,19 +52,28 @@ export const useForm = ({
     return errors
   }
 
-  const validate = (data, onValid, schema) => {
-    return schema.validate(data, { abortEarly: false })
-      .then(
-        () => {
-          setErrors({})
-          onValid(data)
-          setIsSubmitting(true);
-        },
-        err => {
-          setErrors(mapValidationErrors(err))
-        }
-      )
+  const validate = async () => {
+    try {
+      await validation.validate(values, { abortEarly: false })
+    } catch (e) {
+      throw mapValidationErrors(e)
+    }
+     return values
+  }
+  
+  const setFieldError = (fieldName, error) => {
+    const newError = {[fieldName]: error}
+
+    setErrors({ ...errors, ...newError })
   }
 
-  return {handleChange, handleSubmit, handleBlur, values, errors, setErrors, isSubmitting}
+  return {
+    handleChange,
+    handleSubmit,
+    handleBlur,
+    validate,
+    setFieldError,
+    values,
+    errors,
+  }
 };
