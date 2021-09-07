@@ -56,7 +56,10 @@ export const useForm = ({
     try {
       await validation.validate(values, { abortEarly: false })
     } catch (e) {
-      throw mapValidationErrors(e)
+      const fieldsErrors = mapValidationErrors(e);
+      setErrors(fieldsErrors);
+      
+      throw fieldsErrors;
     }
      return values
   }
